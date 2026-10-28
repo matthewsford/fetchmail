@@ -27,16 +27,13 @@ their own licenses.
 docker build -t fetchmail-image .
 ```
 
-### Updating pinned versions
+### Updating the base image
 
-The base image is pinned by digest and the `apk` packages by exact version. Alpine removes
-superseded package versions from a release's repository, so the build breaks when a pinned
-version is replaced. To bump:
+The base image is pinned by digest; the `apk` packages are unpinned and resolve to the latest
+version in Alpine 3.22 at build time. To bump the base digest:
 
-1. Base digest: `docker buildx imagetools inspect alpine:3.22` and copy the `Digest:` line.
-2. Packages: find the current versions with
-   `docker run --rm alpine:3.22@sha256:<digest> sh -c 'apk update && apk policy fetchmail ca-certificates tini'`.
-3. Update the `Dockerfile` and rebuild.
+1. `docker buildx imagetools inspect alpine:3.22` and copy the `Digest:` line.
+2. Update the `FROM` line in the `Dockerfile` and rebuild.
 
 GitHub Actions publishes `ghcr.io/<owner>/fetchmail-image` on pushes to `main` (tags `latest` and
 `YYYY.MM.DD-<sha>`), on `v*` tags, and on a weekly schedule for base-image updates. Pull requests
