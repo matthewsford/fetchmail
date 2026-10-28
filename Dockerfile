@@ -4,6 +4,8 @@ RUN apk add --update \
       fetchmail \
       ca-certificates \
       tini \
+ && (deluser fetchmail || true) \
+ && (delgroup fetchmail || true) \
  && adduser -D -u 1002 -h /tmp fetchmail
 
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
